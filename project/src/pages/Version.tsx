@@ -1,9 +1,19 @@
-import { ReactElement } from "react";
+import React from 'react';
+import VersionPage from '../components/VersionPage';
+import { Message } from '../types/Message';
 
-const Version : React.FC = () : ReactElement => {
-    return (
-        <div> version </div>
-    );
+interface VersionProps {
+  chatroomId: string;
+  category: string;
+  handleSaveToSidebar: (title: string) => Promise<void>;
+  questionTitles: { chatroomId: string; title: string; category: string }[];
+  questions: Message[];
+  fetchQuestionTitles: (categoryType: string) => Promise<void>;
+  onNewMessage: (messages: Message[]) => Promise<void>;
+}
+
+const Version: React.FC<VersionProps> = (props) => {
+  return <VersionPage {...props} />;
 };
 
 export default Version;

@@ -1,0 +1,30 @@
+.button {
+    width: 250px;
+    height: 250px;
+    background-color: #D9D9D9;
+    border-radius: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin: 0 34px;
+}
+
+.button:last-child {
+    margin-right: 0;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.button-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 0px;  /*컨테이너의 전체 패딩 */
+}

@@ -6,27 +6,30 @@ import axios from 'axios';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
+  const [userId, setUserId] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [message, setMessage] = useState<string | null>(null);
 
-  const apiUrl = `http://localhost:4000/users/signup`;
+  const serverIP = process.env.REACT_APP_SERVER_IP;
+  const apiUrl = `${serverIP}/users/signup`;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
+    /*if (password !== confirmPassword) {
       setMessage('비밀번호가 일치하지 않습니다.');
       confirmPasswordRef.current?.focus();
       return;
-    }
+    }*/
 
     try {
       const response = await axios.post(apiUrl, {
+        loginId: userId,
+        username: username,
         email: email,
         password: password,
       });
@@ -40,10 +43,8 @@ const SignUp: React.FC = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        // 서버 응답이 있는 경우
         setMessage(`회원가입 실패: ${error.response.data}`);
       } else {
-        // 서버 응답이 없는 경우
         setMessage('회원가입 실패했습니다. 관리자에게 문의해주세요.');
       }
       console.error('회원가입 중 오류 발생:', error);
@@ -54,6 +55,22 @@ const SignUp: React.FC = () => {
     <LayoutCenter>
       <div className="styled-form">
         <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="styled-input"
+            placeholder="아이디"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            className="styled-input"
+            placeholder="이름"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
           <input
             type="email"
             className="styled-input"
@@ -68,14 +85,6 @@ const SignUp: React.FC = () => {
             placeholder="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            className="styled-input"
-            placeholder="비밀번호 확인"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
           <button type="submit" className="styled-button">회원가입</button>

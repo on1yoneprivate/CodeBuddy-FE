@@ -1,21 +1,28 @@
 import React from 'react';
 import './AnswerArea.css';
 
-interface AnswerAreaProps {
-  messages: string[];
+interface Message {
+  chatroomId: string;
+  type: 'text' | 'image';
+  input: string;
+  output: string;
 }
 
-const AnswerArea: React.FC<AnswerAreaProps> = ({ messages }) => {
+interface AnswerAreaProps {
+  messages: Message[];
+  onSave: (chatroomId: string) => void;
+}
+
+const AnswerArea: React.FC<AnswerAreaProps> = ({ messages, onSave }) => {
   return (
     <div className="answer-area">
-      {/* 
-      {messages.map((msg, index) => (
-        <div key={index} className="message">
-          {msg}
+      {messages.slice().reverse().map((msg) => (
+        <div key={msg.chatroomId} className="message">
+          <p><strong>Input:</strong> {msg.input}</p>
+          <p><strong>Output:</strong> {msg.output}</p>
+          <button onClick={() => onSave(msg.chatroomId)}>Save</button>
         </div>
       ))}
-      */}
-      <p>답변창 (추후 구현 예정) </p>
     </div>
   );
 }

@@ -1,43 +1,19 @@
-import React, { useState, ReactElement } from 'react';
-import ChatInterface from '../components/ChatInterface';
-import styled from 'styled-components';
-import DisplayArea from '../components/DisplayArea';
-import AnswerArea from '../components/AnswerArea';
-import Sidebar from '../components/\bSidebar2';
+import React from 'react';
+import PlanPage from '../components/PlanPage';
+import { Message } from '../types/Message';
 
-const PlanPageContainer = styled.div`
-  display: flex;
-`;
+interface PlanProps {
+  chatroomId: string;
+  category: string;
+  handleSaveToSidebar: (title: string) => Promise<void>;
+  questionTitles: { chatroomId: string; title: string; category: string }[];
+  questions: Message[];
+  fetchQuestionTitles: (categoryType: string) => Promise<void>;
+  onNewMessage: (messages: Message[]) => Promise<void>;
+}
 
-const MainContent = styled.div`
-  flex-grow: 1;
-  padding: 20px;
-  margin-left: 200px; /* Sidebar width */
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the content horizontally */
-  justify-content: center; /* Center the content vertically */
-`;
-
-const PlanPage: React.FC = (): ReactElement => {
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [lastQuestionTitle, setLastQuestionTitle] = useState<string>('');
-
-  const handleResponse = (input: string) => {
-    setQuestions(prevQuestions => [...prevQuestions, input]);
-    setLastQuestionTitle(input.trim().substring(0, 10));
-  };
-
-  return (
-    <PlanPageContainer>
-      <Sidebar questionTitle={lastQuestionTitle} />
-      <MainContent>
-        <ChatInterface handleResponse={handleResponse} />
-        <DisplayArea messages={questions} />
-        <AnswerArea messages={questions} />
-      </MainContent>
-    </PlanPageContainer>
-  );
+const Plan: React.FC<PlanProps> = (props) => {
+  return <PlanPage {...props} />;
 };
 
-export default PlanPage;
+export default Plan;

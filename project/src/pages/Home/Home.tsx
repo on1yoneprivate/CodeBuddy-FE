@@ -13,7 +13,7 @@ const Home: React.FC = (): ReactElement => {
         <div className="button-container">
             <div className='button-row'>
                 <div className="button" onClick={() => handleNavigation('/plan')}>계획 설계</div>
-                <div className="button" onClick={() => handleNavigation('/blueprint')}>설계도 생성</div>
+                <div className="button" onClick={() => handleNavigation('/design')}>설계도 생성</div>
                 <div className="button" onClick={() => handleNavigation('/code')}>코드 구현</div>
             </div>
             <div className="button-row">

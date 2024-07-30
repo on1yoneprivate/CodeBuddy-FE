@@ -3,15 +3,31 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { METHODS } = require('http');
 const { prototype } = require('events');
+const axios = require('axios');
 const app = express();
+require('dotenv').config(); // dotenv 패키지 로드
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// 환경 변수에서 클라이언트 도메인 가져오기
+const clientDomain = process.env.REACT_APP_CLIENT_IP;
+
+const corsOptions = {
+  origin: 'clientDomain', // 환경 변수에서 가져온 클라이언트 도메인
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // 자격 증명(쿠키, 인증 정보 등)을 포함하도록 설정합니다.
+};
+
+app.use(cors(corsOptions)); // CORS 미들웨어 추가
+app.use(express.json());
+
 const users = []; // 간단한 사용자 데이터 저장을 위한 배열
-const savedQuestions = {}; // 간단한 데이터 저장을 위한 객체
+let chatrooms = {};
+
 const chatroomData = {
   "test": {
     "test-chatroom": [
@@ -47,28 +63,23 @@ const chatroomData = {
   }
 };
 
-// 상새 내역 조회하기 위한 임시 데이터
-const chatrooms = {
-  'test-chatroom': [
-    { historyPrompt: 'question1', historyOutput: 'answer1' },
-    { historyPrompt: 'question2', historyOutput: 'answer2' }
-  ],
-  'another-chatroom': [
-    { historyPrompt: 'question3', historyOutput: 'answer3' },
-    { historyPrompt: 'question4', historyOutput: 'answer4' }
-  ]
-};
+app.use(cors(corsOptions));
+// CORS 설정 추가
+app.use(cors({
+  origin: process.env.REACT_APP_CLIENT_IP, // 클라이언트 도메인
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
 
 const posts = []; // 사용자 입력 데이터 저장을 위한 배열
 
 // 회원가입 엔드포인트
 app.post('/users/signup', (req, res) => {
-  const { loginId, email, password, confirmPassword } = req.body;
-  if (!loginId || !email || !password || !confirmPassword) {
+  const { loginId, password, username, email } = req.body;
+
+  if (!loginId || !password || !username || !email) {
     return res.status(400).send('All fields are required');
-  }
-  if (password !== confirmPassword) {
-    return res.status(400).send('Passwords do not match');
   }
   // 이메일 중복 확인
   const existingUserByEmail = users.find(user => user.email === email);
@@ -76,12 +87,12 @@ app.post('/users/signup', (req, res) => {
     return res.status(400).send('Email already exists');
   }
   // 사용자 이름 중복 확인
-  const existingUserByUsername = users.find(user => user.username === loginId);
+  const existingUserByUsername = users.find(user => user.loginId === loginId);
   if (existingUserByUsername) {
-    return res.status(400).send('loginId already exists');
+    return res.status(400).send('LoginId already exists');
   }
   // 사용자 저장
-  users.push({ loginId, email, password });
+  users.push({ loginId, password, username, email });
   res.status(201).send('회원가입 성공');
 });
 
@@ -137,7 +148,7 @@ app.get('/chatrooms/titles', (req, res) => {
 });
 
 // 채팅 상세 내역 가져오기
-app.get('/chatrooms/:chatroomId', (req, res) => {
+app.get('/chats/:chatroomId', (req, res) => {
   const chatroomId = req.params.chatroomId;
   const userId = req.query.loginId;
   const data = chatrooms[chatroomId];
@@ -145,7 +156,7 @@ app.get('/chatrooms/:chatroomId', (req, res) => {
   console.log(`User ID : ${userId}, ChatroomID: ${chatroomId}`);
 
   if (data) {
-    res.status(200).json({ success: true, data: { questinos : data } });
+    res.status(200).json({ success: true, data: { questions : data } });
   } else {
     res.status(400).json({ success: false, error : 'Bad Request'});
   }
@@ -181,9 +192,11 @@ app.post('/posts', (req, res) => {
   res.status(201).send('Post saved successfully');
 })
 
+/*
 // plan 페이지 사용자 입력 처리
-app.post('/main/plan', async (req, res) => {
-  const { input, loginId, categoryType } = req.body;
+app.post(`/main/ask/:chatroomId/:categoryType`, async (req, res) => {
+  const { chatroomId, categoryType } = req.params;
+  const { input, loginId } = req.body;
 
   // 필수 파라미터가 비어있는지 검사
   if (!input) {
@@ -203,39 +216,55 @@ app.post('/main/plan', async (req, res) => {
   const responseOutput = `${input}에 적절한 답변 출력`;
 
   // 데이터 저장 로직
+  const newSavedQuestion = {
+    historyPrompt: input,
+    historyOutput: responseOutput,
+  };
   console.log(`Saving data for user: ${loginId}, category: ${categoryType}`);
   console.log('Saved Question: ', newSavedQuestion);
 
   // 포스트맨에 기록
-  const postmanUrl = 'https://elements.getpostman.com/redirect?entityId=35117926-74ceb443-f0f6-4849-8f8a-e70ae8d7946e&entityType=collection';
+  const postmanUrl = 'https://api.postman.com/collections/35117926-74ceb443-f0f6-4849-8f8a-e70ae8d7946e?access_key=PMAT-01J38B5FQ35TJSHVTZ814665Z9';
   const postmanApiKey = 'ict_test_api_key';
 
   try {
     // 포스트맨에 기록
     await axios.post(postmanUrl, {
-      request: {
-        method: 'POST',
-        header: [
-          {
-            key: 'Content-Type',
-            value: 'application/json'
-          }
-        ],
-        body: {
-          mode: 'raw',
-          raw: JSON.stringify({ input, loginId, categoryType, output: responseOutput })
+      collection: {
+        info: {
+          name: "User Input Collection",
+          schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
         },
-        url: {
-          raw: 'http://localhost:8000/main/plan',
-          protocol: 'http',
-          host: ['localhost'],
-          port: '8000',
-          path: ['main', 'plan']
-        }
+        item: [
+          {
+            name: "User Input Request",
+            request: {
+              method: "POST",
+              header: [
+                {
+                  key: "Content-Type",
+                  value: "application/json"
+                }
+              ],
+              body: {
+                mode: "raw",
+                raw: JSON.stringify({ input, loginId, categoryType, output: responseOutput })
+              },
+              url: {
+                raw: "http://localhost:8000/main/ask",
+                protocol: "http",
+                host: ["localhost"],
+                port: "8000",
+                path: ["main", "ask"]
+              }
+            }
+          }
+        ]
       }
     }, {
       headers: {
-        'X-Api-Key': postmanApiKey
+        'X-Api-Key': postmanApiKey,
+        'Content-Type' : 'application/json'
       }
     });
 
@@ -246,7 +275,64 @@ app.post('/main/plan', async (req, res) => {
     res.status(500).send('Error saving data or creating Postman record');
   }
 });
+*/
 
+const savedQuestions = [];
+
+// 채팅방 입력 넘기기(질문하기)
+app.post('/main/ask/:chatroomId/:categoryType', (req, res) => {
+  const { chatroomId, categoryType } = req.params;
+  const { input, loginId } = req.body;
+
+  if (!input) {
+      return res.status(400).json({ error: 'Input is required' });
+  }
+  if (!loginId) {
+      return res.status(400).json({ error: 'LoginId is required' });
+  }
+
+  console.log(`userId: ${loginId}, input: ${input}, categoryType: ${categoryType}, chatroomId: ${chatroomId}`);
+
+  const responseOutput = `${input}에 적절한 답변 출력`;
+
+  res.status(200).json({ output: responseOutput });
+});
+
+app.put('/save/:chatroomId', (req, res) => {
+  const { chatroomId } = req.params;
+  const { loginId, categoryType, newSavedQuestion } = req.body;
+
+  // Save the chatroom data in the in-memory storage
+  chatrooms[chatroomId] = {
+    loginId,
+    categoryType,
+    newSavedQuestion
+  };
+
+  res.status(200).json({
+    success: true,
+    message: '채팅방을 저장합니다.'
+  });
+});
+
+/*
+// 질문 저장 엔드포인트
+app.post('/main/:category/save/:chatroomId', (req, res) => {
+  const { category, chatroomId } = req.params;
+  const { newSavedQuestion } = req.body;
+
+  if (!newSavedQuestion) {
+    return res.status(400).json({ error: 'newSavedQuestion is required' });
+  }
+
+  console.log(`Saving question for category: ${category}, filename: ${chatroomId}`);
+  console.log('Saving question:', newSavedQuestion);
+
+  savedQuestions.push(newSavedQuestion);
+
+  res.status(200).json({ success: true });
+});
+*/
 
 // 저장된 데이터 가져오기
 app.get('/main/plan/saved', (req, res) => {
@@ -279,5 +365,9 @@ app.get('/main/plan/save/:chatroomid', (req, res) => {
 });
 
 // 서버 실행
-app.listen(8000, () => console.log('Server running on port 8000'));
+// app.listen(8080, () => console.log('Server running on port 8080'));
 
+const PORT = 8080;
+const HOST = '52.78.201.133';
+//app.listen(PORT, HOST, () => console.log(`Server running on http://${HOST}:${PORT}`));
+app.listen(8000, () => console.log('Server running on port 8000'));
