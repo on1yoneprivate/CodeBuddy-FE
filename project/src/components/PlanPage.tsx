@@ -222,12 +222,33 @@ const PlanPage: React.FC<PlanProps> = ({ questionTitles, questions: initialQuest
       console.error('Error generating response:', error);
     }
   };
+  
+  const handleDeleteClick = async (chatroomId: number) => {
+    try {
+      const response = await fetchWithToken(`/delete/${chatroomId}`, {
+        method: 'PUT',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      // 로컬 상태 및 로컬 스토리지에서 삭제 반영
+      setSidebarData(prevSidebarData => prevSidebarData.filter(item => item.chatroomId !== chatroomId));
+      localStorage.removeItem(`chatroom-${chatroomId}`);
+      console.log('저장된 채팅방을 삭제합니다.', `chatroomId: ${chatroomId}`);
+    } catch (error) {
+      console.error('Error deleting chatroom:', error);
+    }
+  };
 
   return (
     <PlanPageContainer>
       <StyledSidebar
         questionTitles={sidebarData}
         onItemClick={(id: number, category: string) => handleSidebarClick(id, category)}
+        onDeleteClick={handleDeleteClick}
+
       />
       <MainContent>
         {currentChatroomId !== null ? (
@@ -236,6 +257,7 @@ const PlanPage: React.FC<PlanProps> = ({ questionTitles, questions: initialQuest
               chatroomId={currentChatroomId}
               onNewMessage={handleNewMessage}
               category={category}
+
             />
             <AnswerArea messages={questions} onSave={() => handleSave(currentChatroomId)} />
           </>
@@ -245,6 +267,7 @@ const PlanPage: React.FC<PlanProps> = ({ questionTitles, questions: initialQuest
               chatroomId={0}
               onNewMessage={handleNewMessage}
               category={category}
+ 
             />
             <AnswerArea messages={questions} onSave={() => console.log('No chatroom to save')} />
           </>
