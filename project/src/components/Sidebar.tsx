@@ -3,13 +3,21 @@ import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
 export interface SidebarProps {
-  questionTitles: { chatroomId: string; title: string; category: string }[];
-  onItemClick: (chatroomId: string, category: string) => void;
+  questionTitles: { chatroomId: number; title: string; category: string }[];
+  onItemClick: (chatroomId: number, category: string) => void;
+  onDeleteClick: (chatroomId: number) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick }) => {
+const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDeleteClick }) => {
   const location = useLocation();
   const currentPath = location.pathname;
+
+  const handleDeleteClick = (chatroomId: number) => {
+    const confirmDelete = window.confirm('삭제하시겠습니까?');
+    if (confirmDelete) {
+      onDeleteClick(chatroomId);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -36,6 +44,10 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick }) => {
             className={`question-item ${currentPath === `/${category}/${chatroomId}` ? 'active' : ''}`}
           >
             {title}
+            <button onClick={(e) => {
+              e.stopPropagation(); // onItemClick이 호출되지 않도록 이벤트 전파를 막습니다.
+              handleDeleteClick(chatroomId);
+            }}>삭제</button>
           </li>
         ))}
       </ul>
