@@ -1,4 +1,5 @@
 const path = require('path');
+<<<<<<< HEAD
 
 module.exports = {
   entry: './src/index.js', // 애플리케이션의 진입점
@@ -23,3 +24,21 @@ module.exports = {
     allowedHosts: 'all', // 모든 호스트 허용
   },
 };
+=======
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    mode:'development',
+  entry: './src/server/server.js',
+  output: {
+    filename: 'main.js',
+    path: `${__dirname}/dist`,
+  },
+  devServer: {
+    static: './dist',
+  },
+  plugins: [new HtmlWebpackPlugin({
+      template: './src/index.html'
+  })],
+};
+>>>>>>> baae464 (채팅방 저장 및 조회)

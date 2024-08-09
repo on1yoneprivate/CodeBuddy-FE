@@ -3,7 +3,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { METHODS } = require('http');
 const { prototype } = require('events');
+<<<<<<< HEAD
 const axios = require('axios');
+=======
+>>>>>>> baae464 (채팅방 저장 및 조회)
 const app = express();
 require('dotenv').config(); // dotenv 패키지 로드
 
@@ -11,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+<<<<<<< HEAD
 
 // 환경 변수에서 클라이언트 도메인 가져오기
 const clientDomain = process.env.REACT_APP_CLIENT_IP;
@@ -72,14 +76,75 @@ app.use(cors({
   credentials: true,
 }));
 
+=======
+
+const users = []; // 간단한 사용자 데이터 저장을 위한 배열
+const savedQuestions = {}; // 간단한 데이터 저장을 위한 객체
+const chatroomData = {
+  "test": {
+    "test-chatroom": [
+      {
+        category: "plan",
+        historyTitle: "Test Chatroom Title",
+        history: [
+          {
+            historyPrompt: "question1",
+            historyOutput: "answer1"
+          },
+          {
+            historyPrompt: "question2",
+            historyOutput: "answer2"
+          }
+        ]
+      },
+      {
+        category: "plan",
+        historyTitle: "Another Test Chatroom Title",
+        history: [
+          {
+            historyPrompt: "question3",
+            historyOutput: "answer3"
+          },
+          {
+            historyPrompt: "question4",
+            historyOutput: "answer4"
+          }
+        ]
+      }
+    ]
+  }
+};
+
+// 상새 내역 조회하기 위한 임시 데이터
+const chatrooms = {
+  'test-chatroom': [
+    { historyPrompt: 'question1', historyOutput: 'answer1' },
+    { historyPrompt: 'question2', historyOutput: 'answer2' }
+  ],
+  'another-chatroom': [
+    { historyPrompt: 'question3', historyOutput: 'answer3' },
+    { historyPrompt: 'question4', historyOutput: 'answer4' }
+  ]
+};
+
+>>>>>>> baae464 (채팅방 저장 및 조회)
 const posts = []; // 사용자 입력 데이터 저장을 위한 배열
 
 // 회원가입 엔드포인트
 app.post('/users/signup', (req, res) => {
+<<<<<<< HEAD
   const { loginId, password, username, email } = req.body;
 
   if (!loginId || !password || !username || !email) {
     return res.status(400).send('All fields are required');
+=======
+  const { loginId, email, password, confirmPassword } = req.body;
+  if (!loginId || !email || !password || !confirmPassword) {
+    return res.status(400).send('All fields are required');
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).send('Passwords do not match');
+>>>>>>> baae464 (채팅방 저장 및 조회)
   }
   // 이메일 중복 확인
   const existingUserByEmail = users.find(user => user.email === email);
@@ -87,12 +152,21 @@ app.post('/users/signup', (req, res) => {
     return res.status(400).send('Email already exists');
   }
   // 사용자 이름 중복 확인
+<<<<<<< HEAD
   const existingUserByUsername = users.find(user => user.loginId === loginId);
   if (existingUserByUsername) {
     return res.status(400).send('LoginId already exists');
   }
   // 사용자 저장
   users.push({ loginId, password, username, email });
+=======
+  const existingUserByUsername = users.find(user => user.username === loginId);
+  if (existingUserByUsername) {
+    return res.status(400).send('loginId already exists');
+  }
+  // 사용자 저장
+  users.push({ loginId, email, password });
+>>>>>>> baae464 (채팅방 저장 및 조회)
   res.status(201).send('회원가입 성공');
 });
 
@@ -148,7 +222,11 @@ app.get('/chatrooms/titles', (req, res) => {
 });
 
 // 채팅 상세 내역 가져오기
+<<<<<<< HEAD
 app.get('/chats/:chatroomId', (req, res) => {
+=======
+app.get('/chatrooms/:chatroomId', (req, res) => {
+>>>>>>> baae464 (채팅방 저장 및 조회)
   const chatroomId = req.params.chatroomId;
   const userId = req.query.loginId;
   const data = chatrooms[chatroomId];
@@ -156,7 +234,11 @@ app.get('/chats/:chatroomId', (req, res) => {
   console.log(`User ID : ${userId}, ChatroomID: ${chatroomId}`);
 
   if (data) {
+<<<<<<< HEAD
     res.status(200).json({ success: true, data: { questions : data } });
+=======
+    res.status(200).json({ success: true, data: { questinos : data } });
+>>>>>>> baae464 (채팅방 저장 및 조회)
   } else {
     res.status(400).json({ success: false, error : 'Bad Request'});
   }
@@ -192,11 +274,17 @@ app.post('/posts', (req, res) => {
   res.status(201).send('Post saved successfully');
 })
 
+<<<<<<< HEAD
 /*
 // plan 페이지 사용자 입력 처리
 app.post(`/main/ask/:chatroomId/:categoryType`, async (req, res) => {
   const { chatroomId, categoryType } = req.params;
   const { input, loginId } = req.body;
+=======
+// plan 페이지 사용자 입력 처리
+app.post('/main/plan', async (req, res) => {
+  const { input, loginId, categoryType } = req.body;
+>>>>>>> baae464 (채팅방 저장 및 조회)
 
   // 필수 파라미터가 비어있는지 검사
   if (!input) {
@@ -216,20 +304,28 @@ app.post(`/main/ask/:chatroomId/:categoryType`, async (req, res) => {
   const responseOutput = `${input}에 적절한 답변 출력`;
 
   // 데이터 저장 로직
+<<<<<<< HEAD
   const newSavedQuestion = {
     historyPrompt: input,
     historyOutput: responseOutput,
   };
+=======
+>>>>>>> baae464 (채팅방 저장 및 조회)
   console.log(`Saving data for user: ${loginId}, category: ${categoryType}`);
   console.log('Saved Question: ', newSavedQuestion);
 
   // 포스트맨에 기록
+<<<<<<< HEAD
   const postmanUrl = 'https://api.postman.com/collections/35117926-74ceb443-f0f6-4849-8f8a-e70ae8d7946e?access_key=PMAT-01J38B5FQ35TJSHVTZ814665Z9';
+=======
+  const postmanUrl = 'https://elements.getpostman.com/redirect?entityId=35117926-74ceb443-f0f6-4849-8f8a-e70ae8d7946e&entityType=collection';
+>>>>>>> baae464 (채팅방 저장 및 조회)
   const postmanApiKey = 'ict_test_api_key';
 
   try {
     // 포스트맨에 기록
     await axios.post(postmanUrl, {
+<<<<<<< HEAD
       collection: {
         info: {
           name: "User Input Collection",
@@ -265,6 +361,31 @@ app.post(`/main/ask/:chatroomId/:categoryType`, async (req, res) => {
       headers: {
         'X-Api-Key': postmanApiKey,
         'Content-Type' : 'application/json'
+=======
+      request: {
+        method: 'POST',
+        header: [
+          {
+            key: 'Content-Type',
+            value: 'application/json'
+          }
+        ],
+        body: {
+          mode: 'raw',
+          raw: JSON.stringify({ input, loginId, categoryType, output: responseOutput })
+        },
+        url: {
+          raw: 'http://localhost:8000/main/plan',
+          protocol: 'http',
+          host: ['localhost'],
+          port: '8000',
+          path: ['main', 'plan']
+        }
+      }
+    }, {
+      headers: {
+        'X-Api-Key': postmanApiKey
+>>>>>>> baae464 (채팅방 저장 및 조회)
       }
     });
 
@@ -275,6 +396,7 @@ app.post(`/main/ask/:chatroomId/:categoryType`, async (req, res) => {
     res.status(500).send('Error saving data or creating Postman record');
   }
 });
+<<<<<<< HEAD
 */
 
 const savedQuestions = [];
@@ -333,6 +455,9 @@ app.post('/main/:category/save/:chatroomId', (req, res) => {
   res.status(200).json({ success: true });
 });
 */
+=======
+
+>>>>>>> baae464 (채팅방 저장 및 조회)
 
 // 저장된 데이터 가져오기
 app.get('/main/plan/saved', (req, res) => {
@@ -365,9 +490,14 @@ app.get('/main/plan/save/:chatroomid', (req, res) => {
 });
 
 // 서버 실행
+<<<<<<< HEAD
 // app.listen(8080, () => console.log('Server running on port 8080'));
 
 const PORT = 8080;
 const HOST = '52.78.201.133';
 //app.listen(PORT, HOST, () => console.log(`Server running on http://${HOST}:${PORT}`));
 app.listen(8000, () => console.log('Server running on port 8000'));
+=======
+app.listen(8000, () => console.log('Server running on port 8000'));
+
+>>>>>>> baae464 (채팅방 저장 및 조회)
