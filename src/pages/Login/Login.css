@@ -1,0 +1,55 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.styled-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+  
+.styled-input {
+    width: 80%;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+  
+.styled-button {
+    width: 80%;
+    padding: 15px;
+    background-color: #007BFF; /* Replace with the color from your palette */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
+  
+.styled-link {
+    font-size: 0.875rem;
+    color: #6c757d; /* Replace with the color from your palette */
+    margin-top: 10px;
+    display: inline-block;
+}
+  
+.styled-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+  
