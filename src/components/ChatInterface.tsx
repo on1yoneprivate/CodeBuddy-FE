@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Message } from '../types/Message';
 import { IoChevronDown } from "react-icons/io5";
+import './ChatInterface.css';
 
 interface ChatInterfaceProps {
   chatroomId: number;
@@ -35,24 +36,24 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
 
   return (
     <div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      <div>
+      <div className="input-area">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+        />
+        <button className="send-button" onClick={handleSendMessage}><IoChevronDown size={18}/></button>
       </div>
-      <button onClick={handleSendMessage}><IoChevronDown /></button>
 
-      <ul>
+      <div className="message-container">
         {questions.map((q, index) => (
-          <li key={index}>
-            <div>Input: {q.input}</div>
-            <div>Output: {q.output}</div>
-          </li>
+          <div key={index} className="message-box">
+            <div><strong>Input:</strong> {q.input}</div>
+            <div><strong>Output:</strong> {q.output}</div>
+          </div>
         ))}
-      </ul>
+      </div>
       
     </div>
   );

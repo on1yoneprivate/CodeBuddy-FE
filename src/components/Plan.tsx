@@ -359,11 +359,6 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
           category={category}
           questions={questions}
         />
-        {questions && questions.length > 0 ? (
-          <AnswerArea messages={questions.filter(q => q.chatroomId === currentChatroomId)} onSave={handleSaveChatroom} />
-        ) : (
-          <p>No messages available.</p>
-        )}
       </MainContent>
       <LogoutButton />
     </PlanContainer>

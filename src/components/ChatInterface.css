@@ -1,38 +1,70 @@
-.chat-interface {
+.input-area {
     position: fixed;
-    top: 20px;
     left: 50%;
-    align-items: center;
-    justify-content: center;
-    width: 1000px;
+    top: 10%;
+    transform: translate(-30%, -50%);
+    width: 100%;
     max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    height: 50px; /* 원하는 높이 설정 */
+    display: flex;
+    align-items: center;
+    padding: 0; /* 패딩 제거 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background-color: #f9f9f9;
-    z-index: 1000; /* 다른 요소 위에 표시되도록 */
+    z-index: 1000;
 }
 
-.chat-input {
-    width: 80%;
-    height: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-
-.send-button {
-    padding: 10px 20px;
-    height: 20px;
+.input-area input {
+    flex: 1; /* 버튼을 제외한 나머지 공간 차지 */
+    height: 100%; /* input-area의 높이에 맞춤 */
     border: none;
-    border-radius: 4px;
+    border-radius: 8px 0 0 8px; /* 왼쪽 모서리 둥글게 */
+    padding-left: 10px; /* 텍스트 입력 간격 */
+    box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
+}
+
+.input-area input:focus {
+    outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+.send-button { 
+    height: 100%; /* input-area의 높이에 맞춤 */
+    padding: 0 20px; /* 버튼의 패딩 설정 */
+    border: none;
+    border-radius: 0 8px 8px 0; /* 오른쪽 모서리 둥글게 */
     background-color: #007BFF;
     color: white;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
 }
 
 .send-button:hover {
     background-color: #0056b3;
+}
+
+.message-container {
+    left: 70%;
+    top:30%;
+    width: 600px; /* 최대 너비를 600px로 고정 */
+    transform: translate(-30%, -50%);
+    max-height: 700px; /* 적절한 높이 설정 */
+    overflow-y: auto; /* 스크롤바가 생기도록 설정 */
+    display: flex;
+    flex-direction: column-reverse; /* 메시지를 역순으로 정렬 */
+}
+.message-box {
+    width: 100%; /* 부모 요소의 너비를 채움 */
+    max-width: 600px; /* 최대 너비를 600px로 고정 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #D9D9D9;
+    box-sizing: border-box; /* 패딩과 경계를 포함하여 너비 계산 */
+    word-wrap: break-word; /* 긴 단어가 있을 경우 줄 바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 줄 바꿈 처리 */
 }
