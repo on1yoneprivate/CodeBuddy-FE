@@ -1,9 +1,8 @@
 .sidebar {
   top: 0;
   left: 0;
-  width: 200px; /* 사이드바 너비 설정 */
+  width: 280px; /* 사이드바 너비 설정 */
   height: 100vh; /* 전체 높이 */
-  padding: 20px;
   background-color: #f0f0f0;
   border-right: 1px solid #ddd;
   position: fixed;
@@ -13,25 +12,21 @@
 
 .navigation-link {
   display: block;
-  margin-bottom: 10px;
   text-decoration: none;
-}
-
-.navigation-link.active button {
-  background-color: #CCCCCC;
-  color: white;
-  font-weight: bold;
 }
 
 .navigation-link button {
   width: 100%;
+  height: 55px;
   padding: 10px;
   border: none;
-  background-color: #CCCCCC;
+  background-color: #f0f0f0;
   cursor: pointer;
-  text-align: left;
-  color: white;
-  font-weight: normal;
+  text-align: center;
+  color: black;
+  font-size:medium;
+  font-weight: bold; /* 글씨를 볼드체로 설정 */
+  border-bottom: 1px solid #000; /* 아래에 구분선 추가 */
 }
 
 .navigation-link button:hover {
@@ -45,6 +40,7 @@
 .question-list {
   list-style: none;
   padding: 0;
+  margin-top: 50px;
   width: 100%;
   overflow-y: auto;
   flex-grow: 1; /* Flexbox에서 나머지 공간을 차지하도록 설정 */
@@ -54,6 +50,7 @@
   cursor: pointer;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  position: relative;
 }
 
 .question-item.active {
@@ -68,12 +65,13 @@
 .question-item button {
   position: absolute; /* 절대 위치 지정 */
   right: 20px; /* 우측에 10px 간격 두기 */
+  bottom: 2px;
   background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 5px;
   border-radius: 5px;
-  color: #CCCCCC;
+  color: black;
   transition: background-color 0.3s ease;
   align-items: center; /* 아이콘을 세로로 중앙 정렬 */
 }

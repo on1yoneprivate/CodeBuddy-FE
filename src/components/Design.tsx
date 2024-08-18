@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ChatInterface from '../components/ChatInterface';
-import AnswerArea from '../components/AnswerArea';
-import Sidebar from '../components/Sidebar';
+import ChatInterface from './ChatInterface';
+import AnswerArea from './AnswerArea';
+import Sidebar from './Sidebar';
 import { Message } from '../types/Message';
 import { fetchWithToken } from '../api/fetchWithToken';
 import { ChatroomProps, QuestionTitle } from '../types/ChatroomProps';
 import { useChatroom } from '../context/ChatroomContext';
 import { handleNewChatroom } from '../utils/chatUtils';
 import { BsSendPlus } from "react-icons/bs";
-import { FiFilePlus, FiFolderPlus, FiPlusCircle } from "react-icons/fi";
-import { FaPlus } from "react-icons/fa";
 import { MdOutlineSaveAlt } from "react-icons/md";
 import LogoutButton from './Logout';
-import Spinner from './Spinner';
 
-const PlanContainer = styled.div`
+const DesignContainer = styled.div`
   display: relative;
 `;
 
@@ -43,11 +40,11 @@ const StyledSidebar = styled(Sidebar)`
 
 const NewChatButton = styled.button`
   position: fixed;
-  left: 280px; /* 사이드바의 오른쪽 외부에 위치 */
+  left: 250px; /* 사이드바의 오른쪽 외부에 위치 */
   top: 10px;
   padding: 10px 20px;
   background-color: transparent;
-  color: black;
+  color: #CCCCCC;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -57,8 +54,8 @@ const NewChatButton = styled.button`
   }
 
   svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 
   .button-new {
@@ -78,11 +75,11 @@ const NewChatButton = styled.button`
 
 const SaveChatButton = styled.button`
   position: fixed;
-  left: 370px;
+  left: 320px;
   top: 10px;
   padding: 10px 20px;
   background-color: transparent;
-  color: black;
+  color: #CCCCCC;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -92,8 +89,8 @@ const SaveChatButton = styled.button`
   }
 
   svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 
   .button-save {
@@ -112,12 +109,11 @@ const SaveChatButton = styled.button`
 `;
 
 
-const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuestions, fetchQuestionTitles, category }) => {
+const Design: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuestions, fetchQuestionTitles, category }) => {
   const [questions, setQuestions] = useState<Message[]>(initialQuestions);
   const [currentChatroomId, setCurrentChatroomId] = useState<number>(1); // 초기 값 1으로 설정
-  const [sidebarData, setSidebarData] = useState<QuestionTitle[]>(questionTitles); // 사이드바
+  const [sidebarData, setSidebarData] = useState<QuestionTitle[]>(questionTitles); // 사이드바에 표시할 데이터
   const [categoryChatroomIds, setCategoryChatroomIds] = useState<{ [key: string]: number }>({});
-  const [loading, setLoading] = useState(false);
 
   const chatroomContext = useChatroom();
 
@@ -159,7 +155,7 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
         fetchWithToken(`/chatrooms/titles?userId=${userId}&categoryType=${categoryType}`, {
           method: 'GET',
         }),
-        fetchWithToken(`/main/plan/saved?userId=${userId}`, {
+        fetchWithToken(`/main/design/saved?userId=${userId}`, {
           method: 'GET',
         }),
       ]);
@@ -181,7 +177,7 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
         ...savedQuestions.map((q: { content: string }) => ({
           chatroomId: parseInt(q.content, 10) || 0,
           title: (q.content || 'No content').trim().substring(0, 10),
-          category: 'plan',
+          category: 'design',
         })),
       ]);
     } catch (error) {
@@ -271,8 +267,6 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
     }
 
     try {
-      setLoading(true);
-
       const apiUrl = `/main/ask/${currentChatroomId}?categoryType=${category.toUpperCase()}`;
       const response = await fetchWithToken(apiUrl, {
         method: 'POST',
@@ -318,8 +312,6 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
       }
     } catch (error) {
       console.error('Error generating response:', error);
-    } finally {
-      setLoading(false);  // 로딩 종료
     }
   };
 
@@ -342,7 +334,7 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
   };
 
   return (
-    <PlanContainer>
+    <DesignContainer>
       <StyledSidebar
         questionTitles={sidebarData}
         onItemClick={(id: number, category: string) => handleSidebarClick(id, category)}
@@ -350,11 +342,7 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
       />
       <MainContent>
         <NewChatButton onClick={() => handleNewChatroom(category, categoryChatroomIds, setCategoryChatroomIds, chatroomContext, setCurrentChatroomId, setQuestions)}>
-          {/* <BsSendPlus /> */}
-          {/* <FiFolderPlus /> */}
-          <FiFilePlus />
-          {/* <FaPlus /> */}
-          {/* <FiPlusCircle /> */}
+          <BsSendPlus />
           <ul className="button-new">
             <li> new chatroom </li>
           </ul>
@@ -372,14 +360,12 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
           questions={questions}
         />
       </MainContent>
-      <div> {loading ? <Spinner /> : <div></div>}
-    </div>
       <LogoutButton />
-    </PlanContainer>
+    </DesignContainer>
   );
 };
 
-export default Plan;
+export default Design;
 
 const FixedChatInterface = styled(ChatInterface)`
   position: fixed;

@@ -1,11 +1,11 @@
 .input-area {
     position: fixed;
-    left: 50%;
-    top: 10%;
-    transform: translate(-30%, -50%);
+    left: 45%;
+    top: 100px;
+    transform: translate(-30%, -30%);
     width: 100%;
-    max-width: 600px;
-    height: 50px; /* 원하는 높이 설정 */
+    max-width: 1000px;
+    height: 70px; /* 원하는 높이 설정 */
     display: flex;
     align-items: center;
     padding: 0; /* 패딩 제거 */
@@ -22,6 +22,8 @@
     border-radius: 8px 0 0 8px; /* 왼쪽 모서리 둥글게 */
     padding-left: 10px; /* 텍스트 입력 간격 */
     box-sizing: border-box; /* 패딩 포함하여 너비 계산 */
+    word-wrap: break-word; /* 긴 단어가 있을 경우 줄 바꿈 처리 */
+    overflow-wrap: break-word; /* 긴 단어를 줄 바꿈 처리 */
 }
 
 .input-area input:focus {
@@ -47,21 +49,25 @@
 }
 
 .message-container {
-    left: 70%;
-    top:30%;
-    width: 600px; /* 최대 너비를 600px로 고정 */
-    transform: translate(-30%, -50%);
+    position: absolute; /* input-area 하단에 위치하도록 설정 */
+    left: 45%; /* 가운데 정렬 */
+    bottom: calc(10% + 60px); /* input-area의 하단에 위치 (input-area의 top + height + 약간의 여유 공간) */
+    transform: translateX(-30%); /* 수평 중앙 정렬 */
+    width: 1000px; /* 최대 너비를 600px로 고정 */
+    transform: translate(-30%, -30%);
     max-height: 700px; /* 적절한 높이 설정 */
+    max-height: calc(90% - 60px);
     overflow-y: auto; /* 스크롤바가 생기도록 설정 */
     display: flex;
-    flex-direction: column-reverse; /* 메시지를 역순으로 정렬 */
+    flex-direction: column; /* 메시지를 역순으로 정렬 */
+    justify-content: flex-start;
 }
 .message-box {
     width: 100%; /* 부모 요소의 너비를 채움 */
-    max-width: 600px; /* 최대 너비를 600px로 고정 */
+    max-width: 1000px; /* 최대 너비를 600px로 고정 */
     border: 1px solid #ccc;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
     border-radius: 5px;
     background-color: #D9D9D9;
     box-sizing: border-box; /* 패딩과 경계를 포함하여 너비 계산 */

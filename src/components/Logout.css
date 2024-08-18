@@ -6,7 +6,7 @@
     right: 20px;
     padding: 10px;
     background-color: transparent;
-    color: #CCCCCC;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -18,8 +18,8 @@
 }
 
 .logout-button svg {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
 }
 
 .button {

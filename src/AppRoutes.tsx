@@ -6,6 +6,7 @@ import Login from './pages/Login/Login';
 import SignUp from './pages/Signup/SignUp';
 import Home from './pages/Home/Home';
 import PlanPage from './pages/PlanPage';
+import DesignPage from './pages/DesignPage';
 import Init from './components/Init';
 import { fetchWithToken } from './api/fetchWithToken';
 import apiClient from './api/apiClient';
@@ -171,6 +172,18 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
               fetchQuestionTitles={fetchQuestionTitles}
               category="plan" 
             /> : <Init />} />
+
+          <Route path="/design" element={isAuthenticated ? 
+            <DesignPage
+              chatroomId={chatroomId}
+              onNewMessage={(messages) => handleNewMessage(messages, 'design')}
+              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'design')} 
+              questionTitles={sidebarData} 
+              questions={designQuestions} 
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="Design" 
+            /> : <Init />} />
+            
         </Routes>
       </div>
     </div>
