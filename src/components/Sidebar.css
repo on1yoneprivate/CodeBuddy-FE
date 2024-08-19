@@ -18,8 +18,8 @@
 }
 
 .navigation-link.active button {
-  background-color: #0056b3;
-  color: black;
+  background-color: #CCCCCC;
+  color: white;
   font-weight: bold;
 }
 
@@ -27,7 +27,7 @@
   width: 100%;
   padding: 10px;
   border: none;
-  background-color: #007bff;
+  background-color: #CCCCCC;
   cursor: pointer;
   text-align: left;
   color: white;
@@ -35,7 +35,11 @@
 }
 
 .navigation-link button:hover {
-  background-color: #0056b3;
+  background-color: #006FFF;
+}
+
+.navigation-link.active button {
+  background-color: #006FFF;
 }
 
 .question-list {
@@ -58,4 +62,21 @@
 
 .question-item:hover {
   background-color: #f0f0f0;
+}
+
+.question-item button {
+  position: absolute; /* 절대 위치 지정 */
+  right: 20px; /* 우측에 10px 간격 두기 */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  color: #CCCCCC;
+  transition: background-color 0.3s ease;
+  align-items: center; /* 아이콘을 세로로 중앙 정렬 */
+}
+
+.question-item button:hover {
+  color: #ff6b6b;
 }

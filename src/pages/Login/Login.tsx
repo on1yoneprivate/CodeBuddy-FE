@@ -5,7 +5,7 @@ import './Login.css';
 import LayoutCenter from '../../components/LayoutCenter';
 import axios from 'axios';
 
-const serverIP = process.env.REACT_APP_Server_IP; // 환경 변수 이름을 확인하세요
+const serverIP = process.env.REACT_APP_SERVER_IP; // 환경 변수 이름을 확인하세요
 console.log('Server IP:', serverIP); // 환경 변수가 올바르게 로드되었는지 확인
 
 const apiUrl = `/users/login`;

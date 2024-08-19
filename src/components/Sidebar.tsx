@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
+import { MdDeleteForever } from "react-icons/md";
 
 export interface SidebarProps {
   questionTitles: { chatroomId: number; title: string; category: string }[];
@@ -47,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
             <button onClick={(e) => {
               e.stopPropagation(); // onItemClick이 호출되지 않도록 이벤트 전파를 막습니다.
               handleDeleteClick(chatroomId);
-            }}>삭제</button>
+            }}><MdDeleteForever size={24}/></button>
           </li>
         ))}
       </ul>

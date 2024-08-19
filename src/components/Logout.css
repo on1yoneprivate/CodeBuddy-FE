@@ -1,11 +1,37 @@
-.button {
-    position: absolute;
+/* LogoutButton.css */
+
+.logout-button {
+    position: fixed;
     top: 10px;
-    left: 10px;
+    right: 20px;
     padding: 10px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: transparent;
+    color: #CCCCCC;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.logout-button:hover {
+    color: #006FFF;
+}
+
+.logout-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.button {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    visibility: hidden; /* 기본적으로 숨김 */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+}
+
+.logout-button:hover .button{
+    visibility: visible; /* hover 시 보이도록 설정 */
+    opacity: 1;
 }

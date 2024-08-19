@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 
+import styled from 'styled-components';
 import { Children } from '../types';
 
 export type LayoutCenterProps = {

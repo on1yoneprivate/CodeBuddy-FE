@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Message } from '../types/Message';
+import { IoChevronDown } from "react-icons/io5";
 
 interface ChatInterfaceProps {
   chatroomId: number;
@@ -42,7 +43,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
       />
       <div>
       </div>
-      <button onClick={handleSendMessage}>Send</button>
+      <button onClick={handleSendMessage}><IoChevronDown /></button>
 
       <ul>
         {questions.map((q, index) => (
