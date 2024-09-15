@@ -1,0 +1,69 @@
+/* Base styles for dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 9999; /* 다른 컴포넌트보다 가장 앞에 위치 */
+  }
+  
+  .dropdown-toggle {
+    background-color: #0085FF1A;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    height: 74px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 225px;
+    box-sizing: border-box;
+  }
+  
+  .dropdown-toggle .arrow {
+    margin-left: 10px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #0085FF1A;
+    border-radius: 30px; /* Apply border-radius to the entire container */
+    width: 225px;
+    z-index: 10000; /* Ensures it's above other content */
+    padding: 0; /* Remove padding to avoid unnecessary space */
+    overflow: hidden; /* Make sure content stays within the rounded container */
+  }
+  
+  .dropdown-menu ul {
+    list-style-type: none; /* Remove bullet points from the list */
+    margin: 0;
+    padding: 0;
+  }  
+  
+  .dropdown-item {
+    width: 225px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #0085FF1A;
+    cursor: pointer;
+    font-size: 16px;
+    border-bottom: 1px solid #333;
+    box-sizing: border-box;
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #0085FF;
+  }
+  
+  

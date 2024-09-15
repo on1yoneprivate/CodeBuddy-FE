@@ -5,20 +5,25 @@ import AnswerArea from '../components/AnswerArea';
 import Sidebar from '../components/Sidebar';
 import { Message } from '../types/Message';
 import { fetchWithToken } from '../api/fetchWithToken';
-import LogoutButton from './Logout';
 import { ChatroomProps, QuestionTitle } from '../types/ChatroomProps';
 import { useChatroom } from '../context/ChatroomContext';
 import { handleNewChatroom } from '../utils/chatUtils';
+import { BsSendPlus } from "react-icons/bs";
+import { LuFilePlus } from "react-icons/lu";
+import { MdOutlineSaveAlt } from "react-icons/md";
+import LogoutButton from './Logout';
+import { SyncLoader } from 'react-spinners';
+import Spinner from './Spinner';
 
-const CodePageContainer = styled.div`
-  display: flex;
+const TestContainer = styled.div`
+  display: relative;
 `;
 
 const MainContent = styled.div`
   flex-grow: 1;
   padding: 20px;
   margin-left: 200px; /* 사이드바 너비를 고려한 여백 */
-  display: flex;
+  display: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -37,38 +42,83 @@ const StyledSidebar = styled(Sidebar)`
 `;
 
 const NewChatButton = styled.button`
-  margin: 10px 0;
+  position: fixed;
+  left: 260px; /* 사이드바의 오른쪽 외부에 위치 */
+  top: 10px;
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: transparent;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    color: #006FFF;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .button-new {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    visibility: hidden; /* 기본적으로 숨김 */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+  }
+
+  &:hover .button-new {
+    visibility: visible; /* hover 시 보이도록 설정 */
+    opacity: 1;
   }
 `;
 
 const SaveChatButton = styled.button`
-  margin: 10px 0;
+  position: fixed;
+  left: 350px;
+  top: 10px;
   padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
+  background-color: transparent;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #218838;
+    color: #006FFF;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .button-save {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    visibility: hidden; /* 기본적으로 숨김 */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease-in-out; /* 애니메이션 효과 추가 */
+  }
+
+  &:hover .button-save {
+    visibility: visible; /* hover 시 보이도록 설정 */
+    opacity: 1;
   }
 `;
 
-const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuestions, fetchQuestionTitles, category }) => {
+
+const Test: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuestions, fetchQuestionTitles, category }) => {
   const [questions, setQuestions] = useState<Message[]>(initialQuestions);
   const [currentChatroomId, setCurrentChatroomId] = useState<number>(1); // 초기 값 1으로 설정
   const [sidebarData, setSidebarData] = useState<QuestionTitle[]>(questionTitles); // 사이드바에 표시할 데이터
   const [categoryChatroomIds, setCategoryChatroomIds] = useState<{ [key: string]: number }>({});
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const chatroomContext = useChatroom();
 
@@ -110,7 +160,7 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
         fetchWithToken(`/chatrooms/titles?userId=${userId}&categoryType=${categoryType}`, {
           method: 'GET',
         }),
-        fetchWithToken(`/main/code/saved?userId=${userId}`, {
+        fetchWithToken(`/main/test/saved?userId=${userId}`, {
           method: 'GET',
         }),
       ]);
@@ -132,13 +182,14 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
         ...savedQuestions.map((q: { content: string }) => ({
           chatroomId: parseInt(q.content, 10) || 0,
           title: (q.content || 'No content').trim().substring(0, 10),
-          category: 'code',
+          category: 'test',
         })),
       ]);
     } catch (error) {
       console.error('초기 데이터를 불러오는 데 실패했습니다.', error);
     }
   };
+
 
   const handleSidebarClick = async (chatroomId: number, category: string) => {
     console.log(`Sidebar item clicked: ${chatroomId}`);
@@ -152,6 +203,9 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
         const response = await fetchWithToken(`/chats/${chatroomId}`, {
             method: 'GET',
         });
+
+        // 서버에서 받은 전체 응답을 로그로 확인
+        console.log('Response:', response);
 
         const responseData = await response.json();
         if (response.ok && responseData.success) {
@@ -183,7 +237,7 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
         console.error('An error occurred while fetching chatroom data:', error);
         setQuestions([]); // 오류 발생 시 질문 초기화
     }
-};
+  };
 
 
   const handleSaveChatroom = async () => {
@@ -215,60 +269,59 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
   };
 
   const handleNewMessage = async (message: Message[]) => {
-    if (category === null) {
-      console.error('No category available for sending a message.');
-      return;
-    }
+  if (category === null) {
+    console.error('No category available for sending a message.');
+    return;
+  }
 
-    try {
-      const apiUrl = `/main/ask/${currentChatroomId}?categoryType=${category.toUpperCase()}`;
-      const response = await fetchWithToken(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: message[0].input,
-        }),
-      });
+  try {
+    setIsLoading(true);
+    const apiUrl = `/main/ask/${currentChatroomId}?categoryType=${category.toUpperCase()}`;
+    const response = await fetchWithToken(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        question: message[0].input,
+      }),
+    });
 
-      const responseText = await response.text();
+    const responseData = await response.json();
+    let responseMessageContent = responseData.data;
 
-      try {
-        const responseLines = responseText.split('\n').filter(line => line.trim() !== '');
-        const responseData = responseLines
-          .filter(line => line.startsWith('data:'))
-          .map(line => {
-            try {
-              const jsonString = line.replace(/^data:/, '').trim();
-              return JSON.parse(jsonString);
-            } catch (jsonParseError) {
-              console.error('JSON Parse error for line:', line);
-              return null;
-            }
-          })
-          .filter(item => item !== null);
+    // 데이터를 \n으로 분할하여 배열로 저장하고 JSX에서 줄바꿈 및 들여쓰기를 반영
+    const formattedContent = responseMessageContent.split('\n').map((line: string, index: number) => (
+      <React.Fragment key={index}>
+        {line.split('\t').map((segment, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <span style={{ marginLeft: '2em' }}></span>}
+            {segment}
+          </React.Fragment>
+        ))}
+        <br />
+      </React.Fragment>
+    ));
 
-        const responseMessageContent = responseData.map((item: { content: string }) => item.content).join('');
-        const responseMessage: Message = {
-          chatroomId: currentChatroomId,
-          type: 'text',
-          input: message[0].input,
-          output: responseMessageContent,
-        };
-        setQuestions(prevQuestions => [...prevQuestions, responseMessage]);
+    const responseMessage: Message = {
+      chatroomId: currentChatroomId,
+      type: 'text',
+      input: message[0].input,
+      output: formattedContent, // 줄바꿈 및 들여쓰기 적용된 JSX 배열로 저장
+    };
 
-        localStorage.setItem(`chatroom-${currentChatroomId}`, JSON.stringify({ questions: [...questions, responseMessage] }));
+    setQuestions(prevQuestions => [...prevQuestions, responseMessage]);
+    localStorage.setItem(`chatroom-${currentChatroomId}`, JSON.stringify({ questions: [...questions, responseMessage] }));
 
-        console.log('질문에 대한 응답을 받았습니다.', responseMessage);
-      } catch (parseError) {
-        console.error('JSON Parse error:', parseError, 'Response Text:', responseText);
-      }
-    } catch (error) {
-      console.error('Error generating response:', error);
-    }
-  };
+    console.log('질문에 대한 응답을 받았습니다.', responseMessage);
+    setIsLoading(false);
+  } catch (error) {
+    console.error('Error generating response:', error);
+  }
+};
 
+  
+  
   const handleDeleteClick = async (chatroomId: number) => {
     try {
       const response = await fetchWithToken(`/delete/${chatroomId}`, {
@@ -288,7 +341,7 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
   };
 
   return (
-    <CodePageContainer>
+    <TestContainer>
       <StyledSidebar
         questionTitles={sidebarData}
         onItemClick={(id: number, category: string) => handleSidebarClick(id, category)}
@@ -296,40 +349,45 @@ const CodePage: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQ
       />
       <MainContent>
         <NewChatButton onClick={() => handleNewChatroom(category, categoryChatroomIds, setCategoryChatroomIds, chatroomContext, setCurrentChatroomId, setQuestions)}>
-          새로운 채팅방 생성
+          <LuFilePlus />
+          <ul className="button-new">
+            <li> new chatroom </li>
+          </ul>
         </NewChatButton>
         <SaveChatButton onClick={handleSaveChatroom}>
-          채팅방 저장
+          <MdOutlineSaveAlt size={12}/>
+          <ul className="button-save">
+              <li>save</li>
+            </ul>
         </SaveChatButton>
-        {currentChatroomId !== 0 ? (
-          <>
-            <ChatInterface
-              chatroomId={currentChatroomId}
-              onNewMessage={handleNewMessage}
-              category={category}
-              questions={questions}
-            />
-            {questions && questions.length > 0 ? (
-              <AnswerArea messages={questions.filter(q => q.chatroomId === currentChatroomId)} onSave={handleSaveChatroom} />
-            ) : (
-              <p>No messages available.</p>
-            )}
-          </>
-        ) : (
-          <>
-            <ChatInterface
-              chatroomId={0}
-              onNewMessage={handleNewMessage}
-              category={category}
-              questions={questions}
-            />
-            <AnswerArea messages={questions} onSave={() => console.log('No chatroom to save')} />
-          </>
-        )}
+        <div>
+          {isLoading ? <Spinner /> : null }
+        </div>
+        <FixedChatInterface
+          chatroomId={currentChatroomId}
+          onNewMessage={handleNewMessage}
+          category={category}
+          questions={questions}
+        />
       </MainContent>
       <LogoutButton />
-    </CodePageContainer>
+    </TestContainer>
   );
 };
 
-export default CodePage;
+export default Test;
+
+const FixedChatInterface = styled(ChatInterface)`
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  z-index: 1000; /* 다른 요소 위에 표시되도록 */
+`;

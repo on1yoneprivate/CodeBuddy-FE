@@ -13,6 +13,14 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
   const location = useLocation();
   const currentPath = location.pathname;
 
+  // 현재 카테고리 추출
+  const currentCategory = currentPath.split('/')[1]; // URL의 첫 번째 segment를 카테고리로 사용
+
+  // 현재 카테고리에 해당하는 질문만 필터링
+  const filteredQuestions = questionTitles.filter(
+    (question) => question.category === currentCategory
+  );
+
   const handleDeleteClick = (chatroomId: number) => {
     const confirmDelete = window.confirm('삭제하시겠습니까?');
     if (confirmDelete) {
@@ -23,22 +31,22 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
   return (
     <div className="sidebar">
       <Link to="/plan" className={`navigation-link ${currentPath === '/plan' ? 'active' : ''}`}>
-        <button>계획 설계</button>
+        <button style={{ fontSize: '14px' }} >계획 설계</button>
       </Link>
       <Link to="/design" className={`navigation-link ${currentPath === '/design' ? 'active' : ''}`}>
-        <button>설계도 생성</button>
+        <button style={{ fontSize: '14px' }}>설계도 생성</button>
       </Link>
       <Link to="/code" className={`navigation-link ${currentPath === '/code' ? 'active' : ''}`}>
-        <button>코드 구현</button>
+        <button style={{ fontSize: '14px' }}>코드 구현</button>
       </Link>
       <Link to="/testcode" className={`navigation-link ${currentPath === '/testcode' ? 'active' : ''}`}>
-        <button>테스트코드</button>
+        <button style={{ fontSize: '14px' }}>테스트코드</button>
       </Link>
       <Link to="/version" className={`navigation-link ${currentPath === '/version' ? 'active' : ''}`}>
-        <button>버전 관리</button>
+        <button style={{ fontSize: '14px' }}>배포</button>
       </Link>
       <ul className="question-list">
-        {questionTitles.map(({ chatroomId, title, category }, index) => (
+        {filteredQuestions.map(({ chatroomId, title, category }, index) => (
           <li 
             key={`${chatroomId}-${index}`} 
             onClick={() => onItemClick(chatroomId, category)}

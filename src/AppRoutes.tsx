@@ -3,13 +3,17 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Message } from './types/Message';
 import Login from './pages/Login/Login';
-import SignUp from './pages/Signup/SignUp';
-import Home from './pages/Home/Home';
+import Home from './components/Home';
 import PlanPage from './pages/PlanPage';
 import Init from './components/Init';
 import { fetchWithToken } from './api/fetchWithToken';
 import apiClient from './api/apiClient';
-
+import SignUp from './pages/SignUp/SignUp';
+import DesignPage from './pages/DesignPage';
+import CodePage from './pages/CodePage';
+import HomePage from './pages/HomePage';
+import TestCodePage from './pages/TestPage';
+import VersionPage from './pages/VersionPage';
 
 interface AppRoutesProps {
   handleResponse: (input: string) => Promise<void>;
@@ -71,6 +75,10 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
   }, [location.pathname, setIsAuthenticated]);
   
   useEffect(() => {
+    console.log('Loading:', loading);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('Current path:', location.pathname);
+
     if (!loading) {
       if (!isAuthenticated && !['/', '/login', '/signup', '/init'].includes(location.pathname)) {
         navigate('/');  // 로그인이 필요하지만 인증되지 않은 상태로 접근한 경우
@@ -156,11 +164,11 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
     <div>
       <div style={{ marginLeft: 200 }}>
         <Routes>
-          <Route path="/" element={<Init />} />
+          <Route path="/" element={<Home />} />
           <Route path="/init" element={<Init />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/plan" element={isAuthenticated ? 
             <PlanPage
               chatroomId={chatroomId}
@@ -171,7 +179,48 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
               fetchQuestionTitles={fetchQuestionTitles}
               category="plan" 
             /> : <Init />} />
+          <Route path="/design" element={isAuthenticated ? 
+            <DesignPage
+              chatroomId={chatroomId}
+              onNewMessage={(messages) => handleNewMessage(messages, 'design')}
+              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'design')} 
+              questionTitles={sidebarData} 
+              questions={planQuestions} 
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="design" 
+            /> : <Init />} />
+          <Route path="/code" element={isAuthenticated ? 
+            <CodePage
+              chatroomId={chatroomId}
+              onNewMessage={(messages) => handleNewMessage(messages, 'code')}
+              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'code')} 
+              questionTitles={sidebarData} 
+              questions={codeQuestions} 
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="code" 
+            /> : <Init />} />
+          <Route path="/testcode" element={isAuthenticated ? 
+            <TestCodePage
+              chatroomId={chatroomId}
+              onNewMessage={(messages) => handleNewMessage(messages, 'test')}
+              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'test')} 
+              questionTitles={sidebarData} 
+              questions={codeQuestions} 
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="test" 
+            /> : <Init />} />
+          <Route path="/version" element={isAuthenticated ? 
+            <VersionPage
+              chatroomId={chatroomId}
+              onNewMessage={(messages) => handleNewMessage(messages, 'deploy')}
+              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'deploy')} 
+              questionTitles={sidebarData} 
+              questions={codeQuestions} 
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="deploy" 
+            /> : <Init />} />
         </Routes>
+
       </div>
     </div>
   );

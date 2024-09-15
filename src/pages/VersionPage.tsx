@@ -1,8 +1,8 @@
 import React from 'react';
-import PlanPage from '../components/PlanPage';
+import Version from '../components/Version';
 import { Message } from '../types/Message';
 
-interface PlanProps {
+interface VersionProps {
   chatroomId: number;
   category: string;
   handleSaveToSidebar: (title: string) => Promise<void>;
@@ -12,8 +12,8 @@ interface PlanProps {
   onNewMessage: (messages: Message[]) => Promise<void>;
 }
 
-const Plan: React.FC<PlanProps> = (props) => {
-  return <PlanPage {...props} />;
+const VersionPage: React.FC<VersionProps> = (props) => {
+  return <Version {...props} />;
 };
 
-export default Plan;
+export default VersionPage;

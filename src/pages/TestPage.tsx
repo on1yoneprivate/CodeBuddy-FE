@@ -1,8 +1,8 @@
 import React from 'react';
-import VersionPage from '../components/VersionPage';
+import Test from '../components/Test';
 import { Message } from '../types/Message';
 
-interface VersionProps {
+interface TestProps {
   chatroomId: number;
   category: string;
   handleSaveToSidebar: (title: string) => Promise<void>;
@@ -12,8 +12,8 @@ interface VersionProps {
   onNewMessage: (messages: Message[]) => Promise<void>;
 }
 
-const Version: React.FC<VersionProps> = (props) => {
-  return <VersionPage {...props} />;
+const TestPage: React.FC<TestProps> = (props) => {
+  return <Test {...props} />;
 };
 
-export default Version;
+export default TestPage;

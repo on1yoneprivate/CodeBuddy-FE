@@ -1,28 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Message } from '../types/Message';
 import { IoChevronDown } from "react-icons/io5";
-import { GoQuestion } from "react-icons/go";
 import { RiQuestionAnswerFill, RiQuestionAnswerLine } from "react-icons/ri";
 import './ChatInterface.css';
-import { SyncLoader } from 'react-spinners';
 
-interface ChatInterfaceProps {
+interface DesignChatInterfaceProps {
   chatroomId: number;
   onNewMessage: (messages: Message[], saveToSidebar: boolean) => void;
   category: string;
   questions: Message[];
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage, category, questions}) => {
+const DesignChatInterface: React.FC<DesignChatInterfaceProps> = ({ chatroomId, onNewMessage, category, questions }) => {
   const [input, setInput] = useState('');
   const [saveToSidebar, setSaveToSidebar] = useState(false);
-  const [loading, setLoading] = useState(false);
   const outputAreaRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = () => {
     if (input.trim() === '') return;
-
-    setLoading(true);
 
     const newMessage: Message = {
       chatroomId,
@@ -33,7 +28,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
 
     onNewMessage([newMessage], saveToSidebar);
     setInput('');
-    setLoading(false);
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -48,6 +42,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
     }
   }, [questions]);
 
+  const renderOutput = (output: string | { imageSrc: string; description: string }) => {
+    if (typeof output === 'string') {
+      return <div className="output-box"><RiQuestionAnswerLine /> {output}</div>;
+    } else {
+      return (
+        <div className="output-box">
+          <img src={output.imageSrc} alt="Generated" className="output-image" />
+          <p>{output.description}</p>
+        </div>
+      );
+    }
+  };
+
   return (
     <div>
       <div className="input-area">
@@ -58,11 +65,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
           onKeyPress={handleKeyPress}
           className="input-field"
         />
-        <button className="send-button" onClick={handleSendMessage} disabled={loading}>
-          {loading ? <SyncLoader color="#006FFF" size={8} /> : <IoChevronDown />}
-        </button>
-      </div>
-      <div>
+        <button className="send-button" onClick={handleSendMessage}><IoChevronDown /></button>
       </div>
       <div className="message-container" ref={outputAreaRef}>
         {questions.map((q, index) => (
@@ -71,23 +74,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ chatroomId, onNewMessage,
               <div className="input-box"><RiQuestionAnswerFill /> {q.input}</div>
             </div>
             <div className="output-container">
-            {q.type === 'text' ? (
-              // For text responses, display inside the output-box
-              <div className="output-box"><RiQuestionAnswerLine /> {q.output}</div>
-            ) : q.type === 'image' && q.output ? (
-              // For image responses, display the image and optional description
-              <div className="output-box">
-                <img src={`data:image/png;base64,${q.output}`} alt={q.description || 'Image'} className="output-image"
-                style={{ maxWidth: "100%", height: "auto" }} />
-                {q.description && <p className="image-description">{q.description}</p>}
-              </div>
-            ) : null}
+              {renderOutput(q.output)}
+            </div>
           </div>
-        </div>
         ))}
       </div>
     </div>
   );
 };
 
-export default ChatInterface;
+export default DesignChatInterface;

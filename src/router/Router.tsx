@@ -1,9 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from '../pages/Home/Home';
-import Plan from "../pages/Plan";
+import Home from '../components/Home';
 import { Message } from "../types/Message";
-import Design from "../pages/Design";
-import Code from "../pages/Code";
+import Plan from "../pages/PlanPage";
+import Design from "../pages/DesignPage";
+import Code from "../pages/CodePage";
+import Test from "../pages/TestPage";
+import Version from "../pages/VersionPage"
+import Init from "../components/Init";
 
 interface RouterProps {
   handleResponse: (input: string) => Promise<void>;
@@ -20,6 +23,7 @@ const Router: React.FC<RouterProps> = ( router: RouterProps ) => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <Route path="/init" element={<Init />} /> */}
         <Route path="/home" element={<Home />} />
         <Route 
           path="/plan" 
@@ -60,6 +64,34 @@ const Router: React.FC<RouterProps> = ( router: RouterProps ) => {
               questions={questions}
               fetchQuestionTitles={fetchQuestionTitles}
               category="code"
+            />
+          } 
+        />
+        <Route 
+          path="/testcode" 
+          element={
+            <Test 
+              chatroomId={chatroomId}
+              onNewMessage={onNewMessage}
+              handleSaveToSidebar={handleSaveToSidebar} 
+              questionTitles={questionTitles} 
+              questions={questions}
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="test"
+            />
+          } 
+        />
+        <Route 
+          path="/version" 
+          element={
+            <Test 
+              chatroomId={chatroomId}
+              onNewMessage={onNewMessage}
+              handleSaveToSidebar={handleSaveToSidebar} 
+              questionTitles={questionTitles} 
+              questions={questions}
+              fetchQuestionTitles={fetchQuestionTitles}
+              category="deploy"
             />
           } 
         />

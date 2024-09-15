@@ -1,9 +1,9 @@
 import React from 'react';
-import CodePage from '../components/CodePage';
+import Code from '../components/Code';
 import { Message } from '../types/Message';
 
 interface CodeProps {
-  chatroomId:number;
+  chatroomId: number;
   category: string;
   handleSaveToSidebar: (title: string) => Promise<void>;
   questionTitles: { chatroomId: number; title: string; category: string }[];
@@ -12,8 +12,8 @@ interface CodeProps {
   onNewMessage: (messages: Message[]) => Promise<void>;
 }
 
-const Code: React.FC<CodeProps> = (props) => {
-  return <CodePage {...props} />;
+const CodePage: React.FC<CodeProps> = (props) => {
+  return <Code {...props} />;
 };
 
-export default Code;
+export default CodePage;
