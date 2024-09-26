@@ -1,0 +1,68 @@
+.retroInput-container {
+    background-color: #e0f0ff;
+    border: 1px solid #d0e0f0;
+    border-radius: 5px;
+    width: 900px;
+    margin-bottom: 10px;
+    max-height: 800px;
+    overflow-y: auto;
+  }
+  
+  .header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  
+  .stage-title {
+    font-size: 1.2em;
+    width: 900px;
+    text-align: left;
+  }
+  
+  .toggle-icon {
+    font-size: 1.2em;
+  }
+  
+  .content {
+    padding: 10px;
+    background-color: #f0f8ff;
+    max-height: 300px; /* 최대 높이 설정 */
+    overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  }
+  
+  .server-data {
+    background-color: #e0f0ff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .user-input textarea {
+    width: 100%;
+    width: 1000px;
+    height: 60px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    resize: none;
+  }
+  
+  .user-input div {
+    margin-bottom: 10px;
+  }
+  
+  .user-input span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .user-input textarea {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    resize: none;
+  }

@@ -8,7 +8,7 @@
 .input-area {
     position: fixed;
     left: 45%;
-    top: 100px;
+    top: 130px;
     transform: translate(-30%, -30%);
     width: 100%;
     max-width: 1000px;
@@ -58,9 +58,11 @@
 
 .message-container {
     position: fixed; /* 화면에 고정되도록 설정 */
-    left: 60%; /* 화면의 가운데 정렬 */
+    left: 56%;
+    width: 100%;
+    max-width: 1200px;
     bottom: 0; /* 화면의 하단에 고정 */
-    transform: translateX(-50%); /* 수평 중앙 정렬 */
+    transform: translateX(-50%); 
     width: 100%; /* 전체 너비를 사용 */
     max-width: 1000px; /* 최대 너비를 1000px로 제한 */
     max-height: 80%; /* 최대 높이를 설정하여 스크롤 가능하게 함 */
@@ -137,3 +139,14 @@
     border-bottom-color: #f19022;
     animation: spinner .8s ease infinite;
   }
+
+  /* 포커스되었을 때 placeholder를 숨기는 부분 */
+.input-field:focus::placeholder {
+  color: transparent; /* 포커스 시 placeholder를 투명하게 */
+}
+
+/* placeholder와 텍스트 사이의 간격을 추가하는 부분 */
+.input-field::placeholder {
+  color: #999; /* placeholder의 기본 색상 */
+  padding-left: 20px; /* placeholder와 텍스트 사이 간격 */
+}

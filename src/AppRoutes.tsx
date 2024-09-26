@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Message } from './types/Message';
 import Login from './pages/Login/Login';
@@ -14,6 +14,8 @@ import CodePage from './pages/CodePage';
 import HomePage from './pages/HomePage';
 import TestCodePage from './pages/TestPage';
 import VersionPage from './pages/VersionPage';
+import ProjectPage from './pages/ProjectPage';
+import RetrospectPage from './pages/RetrospectPage';
 
 interface AppRoutesProps {
   handleResponse: (input: string) => Promise<void>;
@@ -160,15 +162,43 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
     setChatroomId((prevId) => prevId + 1); // chatroomId 증가
   };
 
+  // 새 프로젝트 추가 시 사이드바에 반영 및 동적 경로 생성
+  const handleNewProject = (projectName: string) => {
+    const newProjectId = sidebarData.length + 1;
+    const newProject = {
+      chatroomId: newProjectId,
+      title: projectName,
+      category: 'project',
+    };
+
+    setSidebarData([...sidebarData, newProject]); // 새로운 프로젝트 추가
+    console.log("새 프로젝트 생성 완료:", newProject);
+  };
+
+
   return (
     <div>
       <div style={{ marginLeft: 200 }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/init" element={<Init />} />
-          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} /> 
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<HomePage />} />
+          <Route path="/project/:id" element={<ProjectPage />} />
+
+          {/* 동적으로 프로젝트 경로를 생성 */}
+          {sidebarData.map((project) => (
+            <Route
+              key={project.chatroomId}
+              path={`/project/${project.chatroomId}`}  // 동적으로 생성된 프로젝트 경로
+              element={<ProjectPage />}
+            />
+          ))}
+
+          <Route path="/retrospect/:id" element={<RetrospectPage />} />
+
+
           <Route path="/plan" element={isAuthenticated ? 
             <PlanPage
               chatroomId={chatroomId}

@@ -1,0 +1,21 @@
+.project-name-container {
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    border: 1px solid #E0E0E0;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    width: 1000px;
+    background-color: #fff;
+    align-items: flex-start; /* 상단에 위치하게 설정 */
+  }
+  
+  .icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .text {
+    font-size: 18px;
+    text-align: center;
+  }  

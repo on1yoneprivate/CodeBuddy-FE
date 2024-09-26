@@ -63,13 +63,14 @@
 .question-item.active {
   background-color: #e0e0e0;
   font-weight: bold;
-  padding: 10px;
+  width: 100%;
 }
 
 .question-item:hover {
   background-color: #f0f0f0;
 }
 
+/* 채팅방 삭제*/
 .question-item button {
   position: absolute; /* 절대 위치 지정 */
   right: 20px; /* 우측에 10px 간격 두기 */

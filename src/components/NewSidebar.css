@@ -1,0 +1,82 @@
+.header {
+    height: 50px;
+    display: flex;
+    justify-content: center; /* 좌우 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 20px; /* 패딩을 추가하여 내부 여백 조절 */
+    font-size: 16px;
+    background-color: #FFFFFF; /* 배경을 흰색으로 */
+    color: black; /* 텍스트 색상을 검정으로 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 효과 */
+    position: relative; /* 아이콘 위치 조정 */
+}
+
+.header-icon {
+position: absolute;
+left: 10px; /* 아이콘을 좌측에 고정 */
+}
+
+.sidebar {
+    top: 0;
+    left: 0;
+    width: 200px; /* 사이드바 너비를 200px로 조정 */
+    height: 100vh; /* 전체 높이 */
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-list {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    overflow-y: auto;
+    flex-grow: 1; /* Flexbox에서 나머지 공간을 차지하도록 설정 */
+    /* margin-top: 50px; */
+}
+  
+.project-item {
+    height : 45px;
+    display: flex;
+    justify-content: center; /* 좌우 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 20px; /* 패딩을 추가하여 내부 여백 조절 */
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    /* margin-bottom: 20px; */
+    background-color: #0085FF1A ;
+}
+
+.project-item.active {
+    background-color: #0085FF;
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+}
+
+.project-item:hover {
+    background-color: #f0f0f0;
+}
+
+.project-list button {
+    position: absolute; /* 절대 위치 지정 */
+  right: 20px; /* 우측에 10px 간격 두기 */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: black;
+  transition: background-color 0.3s ease;
+  align-items: center; /* 아이콘을 세로로 중앙 정렬 */
+}

@@ -59,7 +59,8 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
         setIsAuthenticated(true);
         console.log('Setting isAuthenticated to true');
 
-        navigate('/plan');
+        //navigate('/plan');
+        navigate('/project/1');
         console.log('Navigating to home...');
       }
     } catch (error) {

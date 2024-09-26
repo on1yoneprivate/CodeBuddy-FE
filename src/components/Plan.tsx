@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ChatInterface from '../components/ChatInterface';
 import AnswerArea from '../components/AnswerArea';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/NewSidebar';
 import { Message } from '../types/Message';
 import { fetchWithToken } from '../api/fetchWithToken';
 import { ChatroomProps, QuestionTitle } from '../types/ChatroomProps';
@@ -369,9 +369,6 @@ const Plan: React.FC<ChatroomProps> = ({ questionTitles, questions: initialQuest
             <li>save</li>
           </ul>
         </SaveChatButton>
-        <ButtonContainer>
-          <Dropdown />
-        </ButtonContainer>
         <div>
           {isLoading ? <Spinner /> : null }
         </div>

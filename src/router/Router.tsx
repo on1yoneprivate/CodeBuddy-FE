@@ -1,103 +1,31 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from '../components/Home';
-import { Message } from "../types/Message";
-import Plan from "../pages/PlanPage";
-import Design from "../pages/DesignPage";
-import Code from "../pages/CodePage";
-import Test from "../pages/TestPage";
-import Version from "../pages/VersionPage"
-import Init from "../components/Init";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from '../components/NewSidebar'; // Sidebar 컴포넌트 가져오기
+import ProjectPage from '../pages/ProjectPage'; // 각 프로젝트 화면
 
-interface RouterProps {
-  handleResponse: (input: string) => Promise<void>;
-  handleSaveToSidebar: (title: string) => Promise<void>;
-  questionTitles: { chatroomId: number; title: string; category: string }[];
-  questions: Message[];
-  fetchQuestionTitles: (categoryType: string) => Promise<void>;
-  onNewMessage: (message: Message[]) => Promise<void>;
-  chatroomId: number;
-}
+const App = () => {
+  const questionTitles = [
+    { chatroomId: 2, title: "프로젝트 2", category: "project" },
+    { chatroomId: 3, title: "프로젝트 3", category: "project" },
+  ];
 
-const Router: React.FC<RouterProps> = ( router: RouterProps ) => {
-  const { onNewMessage, handleSaveToSidebar, questionTitles, questions, fetchQuestionTitles, chatroomId} = router;
+  const handleItemClick = (chatroomId: number, category: string) => {
+    console.log(`Item clicked: ${chatroomId}, Category: ${category}`);
+  };
+
+  const handleDeleteClick = (chatroomId: number) => {
+    console.log(`Delete clicked: ${chatroomId}`);
+  };
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* <Route path="/init" element={<Init />} /> */}
-        <Route path="/home" element={<Home />} />
-        <Route 
-          path="/plan" 
-          element={
-            <Plan 
-              chatroomId={chatroomId}
-              onNewMessage={onNewMessage} 
-              handleSaveToSidebar={handleSaveToSidebar} 
-              questionTitles={questionTitles} 
-              questions={questions}
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="plan"
-            />
-          } 
-        />
-        <Route 
-          path="/design" 
-          element={
-            <Design 
-              chatroomId={chatroomId}
-              onNewMessage={onNewMessage} 
-              handleSaveToSidebar={handleSaveToSidebar} 
-              questionTitles={questionTitles} 
-              questions={questions}
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="design"
-            />
-          } 
-        />
-        <Route 
-          path="/code" 
-          element={
-            <Code 
-              chatroomId={chatroomId}
-              onNewMessage={onNewMessage}
-              handleSaveToSidebar={handleSaveToSidebar} 
-              questionTitles={questionTitles} 
-              questions={questions}
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="code"
-            />
-          } 
-        />
-        <Route 
-          path="/testcode" 
-          element={
-            <Test 
-              chatroomId={chatroomId}
-              onNewMessage={onNewMessage}
-              handleSaveToSidebar={handleSaveToSidebar} 
-              questionTitles={questionTitles} 
-              questions={questions}
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="test"
-            />
-          } 
-        />
-        <Route 
-          path="/version" 
-          element={
-            <Test 
-              chatroomId={chatroomId}
-              onNewMessage={onNewMessage}
-              handleSaveToSidebar={handleSaveToSidebar} 
-              questionTitles={questionTitles} 
-              questions={questions}
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="deploy"
-            />
-          } 
-        />
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <Sidebar
+        questionTitles={questionTitles}
+        onItemClick={handleItemClick}
+        onDeleteClick={handleDeleteClick}
+      />
+    </Router>
   );
 };
 
-export default Router;
+export default App;

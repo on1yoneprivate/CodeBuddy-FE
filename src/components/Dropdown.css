@@ -7,17 +7,18 @@
   
   .dropdown-toggle {
     background-color: #0085FF1A;
+    border-radius: 30px;
     color: black;
-    padding: 10px 20px;
+    padding: 10px;
     border: none;
     border-radius: 30px;
-    height: 74px;
+    width: 180px;
+    height: 65px;
     font-size: 16px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 225px;
     box-sizing: border-box;
   }
   
@@ -28,12 +29,12 @@
   .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 20px;
     background-color: #0085FF1A;
-    border-radius: 30px; /* Apply border-radius to the entire container */
-    width: 225px;
+    border-radius: 30px;
+    width: 180px;
     z-index: 10000; /* Ensures it's above other content */
-    padding: 0; /* Remove padding to avoid unnecessary space */
+    padding: 10px; /* Remove padding to avoid unnecessary space */
     overflow: hidden; /* Make sure content stays within the rounded container */
   }
   
@@ -44,14 +45,12 @@
   }  
   
   .dropdown-item {
-    width: 225px;
-    height: 74px;
+    width: 180px;
+    height: 65px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 10px;
-    background-color: #0085FF1A;
     cursor: pointer;
     font-size: 16px;
     border-bottom: 1px solid #333;
@@ -64,6 +63,7 @@
   
   .dropdown-item:hover {
     background-color: #0085FF;
+    border-radius: 30px;
   }
   
   
