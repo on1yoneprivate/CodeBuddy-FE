@@ -93,8 +93,7 @@
     margin-bottom: 10px; /* input과 output 사이에 간격 추가 */
   }
   
-  .input-box,
-  .output-box {
+  .input-box {
     border: 1px solid #ccc;
     padding: 15px;
     border-radius: 5px;
@@ -104,9 +103,15 @@
     overflow-wrap: break-word;
   }
 
-  .output-box {
+  .output-container {
     background-color: #0085FF1A;
     max-width: 1200px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     /* min-height: 150px; ppt 제작을 위한 빈 container 생성 */
   }
 

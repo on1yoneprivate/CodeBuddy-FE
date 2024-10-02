@@ -25,7 +25,7 @@ const ProjectName: React.FC<ProjectNameProps> = ({ loginId, chatroomId }) => {
         const data = result.data; // 응답 데이터에서 data 부분 추출
 
         // chatroomId에 맞는 프로젝트 이름 찾기
-        const project = data[String(chatroomId)];
+        const project = data[chatroomId]; // chatroomId와 일치하는 값 가져오기
 
         if (project) {
           setProjectName(project); // 해당 chatroomId의 프로젝트 이름 설정

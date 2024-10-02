@@ -29,7 +29,6 @@ const ProjectPage = () => {
   const [categoryChatroomIds, setCategoryChatroomIds] = useState<{ [key: string]: number }>({});
   const chatroomContext = useChatroom();
   const [isLoading, setIsLoading] = useState(false);
-  const [chatroomId, setChatroomId] = useState(1);
   const [questionTitles, setQuestionTitles] = useState<QuestionTitle[]>(initialQuestionTitles);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // State for selected category
   const navigate = useNavigate();
@@ -37,6 +36,7 @@ const ProjectPage = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
   const [projects, setProjects] = useState<string[]>([]); // Example project list
   const { id } = useParams<{ id: string }>(); // URL에서 id 추출
+  const { chatroomId } = useParams<{ chatroomId: string }>();
 
   const options = [
     { label: '계획 설계', value: 'PLAN' },
@@ -48,29 +48,45 @@ const ProjectPage = () => {
   const [sidebarData, setSidebarData] = useState<QuestionTitle[]>(initialQuestionTitles);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // 컴포넌트가 처음 렌더링될 때 localStorage에서 데이터 불러오기
   useEffect(() => {
-    const savedChatroomId = localStorage.getItem('currentChatroomId');
-    if (savedChatroomId) {
-      setCurrentChatroomId(parseInt(savedChatroomId, 10));
+    if (!chatroomId) {
+      console.error('chatroomId가 설정되지 않았습니다.');
+      return;
     }
   
+    const fetchChatDetails = async () => {
+      try {
+        const response = await fetchWithToken(`/chats/${chatroomId}?categoryType=PLAN`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch chat details');
+        }
+  
+        const data = await response.json();
+        console.log('채팅 데이터:', data);
+        // Process and display the chat data for the PLAN category
+      } catch (error) {
+        console.error('채팅 데이터를 불러오는 중 에러:', error);
+      }
+    };
+
     const savedSidebarData = localStorage.getItem('sidebarData');
     if (savedSidebarData) {
       setSidebarData(JSON.parse(savedSidebarData));
     }
-
-    if (currentChatroomId) {
-      setActiveProjectId(currentChatroomId);
-      setChatroomId(currentChatroomId);
-      console.log(`초기 activeProjectId 설정됨: ${currentChatroomId}`);
-    }
-  }, [currentChatroomId]);
+  
+    fetchChatDetails();
+  }, [chatroomId]);
   
 
   // 채팅방 클릭 시 실행되는 함수
   const handleItemClick = (chatroomId: number, category: string) => {
-    setChatroomId(chatroomId);
+    // setChatroomId(chatroomId);
     setActiveProjectId(chatroomId); // activeProjectId 설정
     console.log(`Chatroom ${chatroomId}이(가) 선택되었습니다. 카테고리: ${category}`);
     console.log(`activeProjectId가 설정되었습니다: ${chatroomId}`);
@@ -306,21 +322,59 @@ const ProjectPage = () => {
     }
   };
 
-  // Dropdown에서 선택 시 동작
   const handleDropdownChange = (value: string) => {
     setSelectedCategory(value); // 카테고리 선택 시 상태 업데이트
     console.log('드롭다운에서 선택된 값:', value); // 선택된 값을 로그로 출력
-
-    if (!chatroomId) {
-      console.error('activeProjectId가 설정되지 않았습니다.');
-      return;
-    }
-
-    if (value === 'retrospective') {
-      console.log('회고 페이지로 이동:', `/retrospect/${chatroomId}`); // 회고 페이지 경로를 로그로 출력
-      navigate(`/retrospect/${chatroomId}`);
+  
+    // Ensure chatroomId is set before using it
+    if (chatroomId) {
+      if (value === 'RETROSPECTIVE') {
+        console.log('회고 페이지로 이동:', `/retrospect/${chatroomId}`);
+        navigate(`/retrospect/${chatroomId}`);
+      } else {
+        console.log('카테고리 페이지로 이동:', `/${value.toLowerCase()}/${chatroomId}`);
+        navigate(`/${value.toLowerCase()}/${chatroomId}`);
+      }
+    } else {
+      console.error('chatroomId가 설정되지 않았습니다.');
     }
   };
+  
+
+  const renderCategoryContent = () => {
+    switch (selectedCategory) {
+      case 'PLAN':
+        return (
+          <FixedChatInterface
+            chatroomId={currentChatroomId as number}
+            onNewMessage={handleNewMessage}
+            category="PLAN"
+            questions={questions.filter(q => q.category === 'PLAN')} // PLAN 카테고리 질문만 필터링
+          />
+        );
+      case 'DESIGN':
+        return (
+          <FixedChatInterface
+            chatroomId={currentChatroomId as number}
+            onNewMessage={handleNewMessage}
+            category="DESIGN"
+            questions={questions.filter(q => q.category === 'DESIGN')} // DESIGN 카테고리 질문만 필터링
+          />
+        );
+      case 'CODE':
+        return (
+          <FixedChatInterface
+            chatroomId={currentChatroomId as number}
+            onNewMessage={handleNewMessage}
+            category="CODE"
+            questions={questions.filter(q => q.category === 'CODE')} // CODE 카테고리 질문만 필터링
+          />
+        );
+      default:
+        return null; // 선택되지 않은 경우 아무것도 렌더링하지 않음
+    }
+  };
+
   
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
@@ -375,14 +429,9 @@ const ProjectPage = () => {
         <div>
           {isLoading ? <Spinner /> : null }
         </div>
-        {currentChatroomId !== null && (
-          <FixedChatInterface
-            chatroomId={currentChatroomId as number}  // 여기서 null이 아니라고 보장
-            onNewMessage={handleNewMessage}
-            category={'PLAN'}
-            questions={questions}
-          />
-        )}
+
+        {renderCategoryContent()}
+        
       </MainContent>
 
       <CenteredDropdownContainer>

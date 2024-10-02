@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './NewSidebar.css';
 import { MdDeleteForever, MdMenu } from "react-icons/md";
 import Dropdown from './Dropdown';  // Dropdown 컴포넌트 가져오기
+import { fetchWithToken } from '../api/fetchWithToken';
 
 export interface SidebarProps {
   questionTitles: { chatroomId: number; title: string; category: string }[];
@@ -18,6 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
   // 상태 추가: 클릭된 프로젝트 추적
   const [activeProjectId, setActiveProjectId] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 열림/닫힘 상태 관리
+  const [selectedCategory, setSelectedCategory] = useState<string>('PLAN'); // 드롭다운에서 선택된 카테고리
+  const [chatData, setChatData] = useState<any[]>([]); // 채팅 데이터 상태
 
   // 드롭다운에 사용할 옵션 목록
   const options = [
@@ -28,18 +31,51 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
   ];
 
   // 프로젝트 클릭 시 이동할 경로 설정 및 드롭다운 토글
-  const handleProjectClick = (chatroomId: number, category: string) => {
-    // 이미 클릭된 프로젝트라면 다시 클릭 시 닫기
+  const handleProjectClick = async (chatroomId: number) => {
     if (activeProjectId === chatroomId) {
-      setActiveProjectId(null);  // 클릭된 상태 해제
-      setIsDropdownOpen(false);  // 드롭다운 닫기
-      console.log('드롭다운 닫힘');
+      setActiveProjectId(null);
+      setIsDropdownOpen(false);
     } else {
-      setActiveProjectId(chatroomId); // 클릭된 프로젝트를 활성화
-      setIsDropdownOpen(true);        // 드롭다운 무조건 열림
-      console.log('드롭다운 열림');
+      setActiveProjectId(chatroomId);
+      setIsDropdownOpen(true);
+      setSelectedCategory('PLAN'); // 기본값으로 'PLAN' 설정
+      navigate(`/plan/${chatroomId}`);
+      console.log("navigate start");
+
+      // PLAN 카테고리의 데이터를 불러오기
+      await fetchChatData(chatroomId, 'PLAN');
     }
-    navigate(`/${category}/${chatroomId}`);
+  };
+
+  // 선택된 카테고리의 채팅 데이터를 불러오는 함수
+  const fetchChatData = async (chatroomId: number, categoryType: string) => {
+    try {
+      const response = await fetchWithToken(`/chats/${chatroomId}?categoryType=${categoryType.toUpperCase()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch chat details');
+      }
+
+      const data = await response.json();
+      console.log(`${categoryType.toUpperCase()} 카테고리 데이터:`, data);
+      setChatData(data); // 데이터를 상태로 저장하여 렌더링할 수 있게 함
+    } catch (error) {
+      console.error('채팅 데이터를 불러오는 중 에러:', error);
+    }
+  };
+
+  // 드롭다운에서 카테고리 선택 시 해당 카테고리의 데이터를 불러오고 경로 이동
+  const handleCategoryChange = (chatroomId: number, categoryType: string) => {
+    setSelectedCategory(categoryType.toUpperCase());
+    navigate(`/${categoryType}/${chatroomId}`);
+
+    // 선택된 카테고리의 채팅 데이터를 불러오기
+    fetchChatData(chatroomId, categoryType);
   };
 
   const handleDeleteClick = (chatroomId: number) => {
@@ -60,13 +96,13 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
 
       <ul className="project-list">
         {/* 부모로부터 전달받은 questionTitles 사용 */}
-        {questionTitles.map(({ chatroomId, title, category }) => (
+        {questionTitles.map(({ chatroomId, title }) => (
           <div key={chatroomId}>
             {/* 프로젝트가 클릭되면 다른 프로젝트는 숨기고, 클릭된 프로젝트만 표시 */}
             {activeProjectId === null || activeProjectId === chatroomId ? (
               <li
-                onClick={() => handleProjectClick(chatroomId, category)} // 클릭 시 경로 변경 및 드롭다운 토글
-                className={`project-item ${currentPath === `/${category}/${chatroomId}` ? 'active' : ''}`}
+                onClick={() => handleProjectClick(chatroomId)} // 클릭 시 경로 변경 및 드롭다운 토글
+                className={`project-item ${currentPath.includes(`/project/${chatroomId}`) ? 'active' : ''}`}
               >
                 {title}
                 <button
@@ -86,7 +122,10 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
                 options={options}  // 여기에 옵션 전달
                 selected={null}
                 onChange={(value: string) => {
+                  setSelectedCategory(value.toUpperCase()); // 선택된 카테고리 업데이트
                   console.log('드롭다운 선택된 값:', value);
+                  // 선택된 카테고리와 chatroomId로 경로 이동
+                  navigate(`/${value}/${chatroomId}`);
                 }}
                 isOpen={isDropdownOpen}    // 드롭다운 열림/닫힘 상태 전달
                 setIsOpen={setIsDropdownOpen} // 드롭다운 상태 관리 함수 전달
@@ -95,6 +134,7 @@ const Sidebar: React.FC<SidebarProps> = ({ questionTitles, onItemClick, onDelete
           </div>
         ))}
       </ul>
+
     </div>
   );
 };

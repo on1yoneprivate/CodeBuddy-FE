@@ -1,0 +1,15 @@
+.retrospect-container {
+    display: flex;
+    justify-content: center; /* Center the content */
+    background-color: #E5F0FB;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adding shadow for container */
+    max-width: 1000px; /* Max width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+    border-radius: 10px;
+    width: 100%; /* Full width of the container */
+    font-size: 1rem;
+    padding: 15px;
+}
+

@@ -11,6 +11,7 @@ export interface Message {
   input: string;
   output: string;
   description?: string;
+  category?: string;
 }
 
 export interface DesignMessage {

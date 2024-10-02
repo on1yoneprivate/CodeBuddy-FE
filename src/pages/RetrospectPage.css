@@ -18,13 +18,18 @@
 }
 
 .main {
-    position: fixed;
-    top: 150px;
-    left: 50%;
+    position: relative;
+    top: 50px;
+    left: 40%;
     transform: translateX(-50%);
     margin-top: 20px;
+    width: 100%;
     max-height: 700px; /* 최대 높이 설정 */
     overflow-y: auto; /* 스크롤 가능하도록 설정 */
+}
+
+.create-retrospect {
+    margin-top: 20px; /* main 요소와의 간격 추가 */
 }
 
 .send {
@@ -32,3 +37,11 @@
     right: 200px;
     bottom: 40px;
 }
+
+.retro-code {
+    white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }

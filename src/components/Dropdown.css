@@ -36,6 +36,7 @@
     z-index: 10000; /* Ensures it's above other content */
     padding: 10px; /* Remove padding to avoid unnecessary space */
     overflow: hidden; /* Make sure content stays within the rounded container */
+    align-items: center;
   }
   
   .dropdown-menu ul {
@@ -55,6 +56,7 @@
     font-size: 16px;
     border-bottom: 1px solid #333;
     box-sizing: border-box;
+    align-items: center;
   }
   
   .dropdown-item:last-child {

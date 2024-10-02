@@ -16,6 +16,7 @@ import TestCodePage from './pages/TestPage';
 import VersionPage from './pages/VersionPage';
 import ProjectPage from './pages/ProjectPage';
 import RetrospectPage from './pages/RetrospectPage';
+import { SidebarProvider } from './context/SidebarContext';
 
 interface AppRoutesProps {
   handleResponse: (input: string) => Promise<void>;
@@ -83,7 +84,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
 
     if (!loading) {
       if (!isAuthenticated && !['/', '/login', '/signup', '/init'].includes(location.pathname)) {
-        navigate('/');  // 로그인이 필요하지만 인증되지 않은 상태로 접근한 경우
+        navigate('/login');  // 로그인이 필요하지만 인증되지 않은 상태로 접근한 경우
       } else if (isAuthenticated && (location.pathname === '/' || location.pathname === '/init')) {
         navigate('/home');  // 이미 로그인한 상태에서 init이나 루트에 있을 경우 home으로 리다이렉트
       }
@@ -177,7 +178,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
 
 
   return (
-    <div>
+    <SidebarProvider> {/* SidebarProvider를 여기에서 Routes 전체를 감쌉니다 */}
       <div style={{ marginLeft: 200 }}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -185,7 +186,7 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} /> 
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/project/:id" element={<ProjectPage />} />
+          <Route path="/project/:chatroomId" element={<ProjectPage />} />
 
           {/* 동적으로 프로젝트 경로를 생성 */}
           {sidebarData.map((project) => (
@@ -196,63 +197,14 @@ const AppRoutes: React.FC<AppRoutesProps> = ({ chatroomId, setChatroomId, isAuth
             />
           ))}
 
-          <Route path="/retrospect/:id" element={<RetrospectPage />} />
+          <Route path="/retrospect/:chatroomId" element={<RetrospectPage />} />
 
-
-          <Route path="/plan" element={isAuthenticated ? 
-            <PlanPage
-              chatroomId={chatroomId}
-              onNewMessage={(messages) => handleNewMessage(messages, 'plan')}
-              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'plan')} 
-              questionTitles={sidebarData} 
-              questions={planQuestions} 
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="plan" 
-            /> : <Init />} />
-          <Route path="/design" element={isAuthenticated ? 
-            <DesignPage
-              chatroomId={chatroomId}
-              onNewMessage={(messages) => handleNewMessage(messages, 'design')}
-              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'design')} 
-              questionTitles={sidebarData} 
-              questions={planQuestions} 
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="design" 
-            /> : <Init />} />
-          <Route path="/code" element={isAuthenticated ? 
-            <CodePage
-              chatroomId={chatroomId}
-              onNewMessage={(messages) => handleNewMessage(messages, 'code')}
-              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'code')} 
-              questionTitles={sidebarData} 
-              questions={codeQuestions} 
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="code" 
-            /> : <Init />} />
-          <Route path="/testcode" element={isAuthenticated ? 
-            <TestCodePage
-              chatroomId={chatroomId}
-              onNewMessage={(messages) => handleNewMessage(messages, 'test')}
-              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'test')} 
-              questionTitles={sidebarData} 
-              questions={codeQuestions} 
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="test" 
-            /> : <Init />} />
-          <Route path="/version" element={isAuthenticated ? 
-            <VersionPage
-              chatroomId={chatroomId}
-              onNewMessage={(messages) => handleNewMessage(messages, 'deploy')}
-              handleSaveToSidebar={(title) => handleSaveToSidebar(title, 'deploy')} 
-              questionTitles={sidebarData} 
-              questions={codeQuestions} 
-              fetchQuestionTitles={fetchQuestionTitles}
-              category="deploy" 
-            /> : <Init />} />
+          <Route path="/plan/:chatroomId" element={<PlanPage />} />
+          <Route path="/design/:chatroomId" element={<DesignPage />} />
+          <Route path="/code/:chatroomId" element={<CodePage />} />
         </Routes>
-
       </div>
-    </div>
+    </SidebarProvider>  // SidebarProvider를 이 위치에서 전체 컴포넌트를 감쌉니다
   );
 };
 
