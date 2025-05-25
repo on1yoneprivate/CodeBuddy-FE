@@ -1,46 +1,28 @@
-# Getting Started with Create React App
+# [2024 한이음 ICT 공모전] Code:Buddy
+![Frame](https://github.com/user-attachments/assets/199c3209-8a7e-491e-b80c-9a89e0d97f5a)
+- 프로젝트 단계를 요구 분석, 설계도 생성, 코드 생성, 회고 4단계로 분류하여 적절한 답변을 생성한다.
+  
+---
+> ## 🚀  주요 기능
+### 1️⃣ 요구 분석
+![Image](https://github.com/user-attachments/assets/5f42ae53-6a7e-43f2-a26c-637726f07b3a)
+- 사용자가 필요로 하는 기능을 바탕으로, 요구 사항 명세서를 작성해 준다.
+</br> </br>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 2️⃣ 설계도 생성
+![Image](https://github.com/user-attachments/assets/d580a154-9f40-4fbc-96f3-d417e854367c)
+- 요구 분석 단계에서 도출된 명세서를 이용하여,  **UML 다이어그램** 이미지를 생성해 준다.
+</br> </br>
 
-## Available Scripts
+### 3️⃣ 코드 생성
+![Image](https://github.com/user-attachments/assets/8ea6a541-d7a2-41d9-861c-a03fe043a2ac)
+- 도출된 명세서를 바탕으로, 코드를 작성해 준다.
+</br> </br>
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 4️⃣ 회고
+![Image](https://github.com/user-attachments/assets/c9106bfd-8c6b-487f-96ae-ce4ae8951c39)
+![Image](https://github.com/user-attachments/assets/e2d453df-5116-4162-bc98-fcb511ef9edc)
+- KPT 회고 방식을 도입하여, 프로젝트 진행 중 효율성과 품질을 향상시킨다.
+- **Keep** : 유지하고 싶은 항목
+- **Problem** : 개선할 필요가 있는 항목
+- **Try** : 다음 스프린트에서 시도할 새로운 방법들
